@@ -1,109 +1,109 @@
 # Contract Risk Scoring
-## ***(Risk scoring of commercial contracts)***
+### Prioritizing legal review of commercial contracts using clause-level risk indicators
 
-## Business Goal
+## Key Takeaway
 
-When entering into dozens or hundreds of commercial contracts, companies physically cannot provide each once with 
-an equally in-dept legal review. As a result, contracts with the most dangerous terms (uncapped liability, exclusivity,
-volume restrictions, etc.) sometimes receive as much attention as routine NDAs, and legal risk accumulates.
+Reviewing every contract with equal depth wastes limited legal capacity.
+Analysis of 510 real commercial contracts shows ***risk is highly concentrated**: the top 15 contracts (3% of the 
+portfolio) carry an average risk score 3.6x higher than rest of the sample. Two specific clauses - **Uncapped 
+Liability** and **Non-Compete** - are present in over 90% of thesr high-risk contracts, despite being relatively rare 
+overall, making them reliable early-warning flags.
 
-I set myself the task of using a sample of 510 real commercial contracts to determine which terms most often create risk
-for a company and to build a prioritization model - a risk score - that allows the legal/complaince department to 
-quickly identify contracts requiring priority review.
+**Recommendation:** prioritize legal review using a risk score, and treat the presence of Uncapped Liability or 
+Non-Compete as an immediate red flag - even before a full score is calculated. This lets a legal/compliance team focus 
+limited review time, where risk is actually concentrated, instead of spreading it evenly across the portfolio.
 
-## Data Sources and Limitations
+![Risk score sistribution](outputs/risk_score_distribution.png)
 
-- **Dataset:** [CUAD (Contract Understanding Atticus Dataset)] (https://www.atticusprojectai.org/cuad) - 510 commercial
-contracts from the SEC EDGAR open source system, annotated by practicing attorneys into 41 contract terms and 
-conditions. Licensed under CC BY 4.0.
+## Business Context
 
-- **Limitations:**
-  
-  - Contracts are taken from public SEC filings - these are primary contracts of publicly traded US companies; the 
-sample isn't representative or private/non-public businesses or non-US jurisdictions.
-  - Risk weight for each contract term category are manually assigned based on my expertise in compliance/legal matters,
-this is an expert-based, non-statistically derived, model (not machine learning), and this is a deliberate choice for 
-this stage project.
-  - 81 contracts (15.9% of the sample) have partially redacted text for individual terms and conditions.
+Companies signing dozens or hundreds of commercial contracts cannot give each one an equally in-depth legal review. As a
+result, contracts with dangerous terms (uncapped liability, exclusivity, volume restrictions, etc.) sometimes get the 
+same attention as routine NDAs, and legal risk quietly accumulates. This project builds a lightweight, transparent 
+prioritization model - a risk score - that a legal or compliance team can use to identify which contracts need priority 
+review.
 
-## Approach 
+## Key Findings
 
-1. Automatically identified all conditions in the dataset, labeled a binary (whether the condition is present or not 
-in the contract).
+**1. Risk is concentrated in a small group of contracts, not evenly distributed.**
+The average risk score across the full sample was **11.0** (max: 44, for a Content License, Marketing and Sales 
+Agreement). The top 15 highest-risk contracts (under 3% of the sample) averaged **36.7** - 3.6x higher than the 
+remaining 495 contracts (10.3). Only 42.7% of contracts scored above the sample average, meaning the average is pulled 
+up by a small number of outliers rather than reflecting a typical contract.
 
-2. Calculated the frequency of each condition across the entire sample of 510 contracts.
+*Implication: reviewing all 510 contracts equally is inefficient prioritizing by score concentrates review time risk 
+actually lives*
 
-3. Assigned a risk weight from 1 to 10 condition category based on potential legal/financial consequences it could have 
-for the party signing the contract (e.g. Uncapped Liability - 10, Governing Law - default weight).
+**2. Uncapped Liability and Non-Compete are the strongest risk indicators - not most common clauses.**
+Uncapped Liability appears in only 21.8% of contracts overall, but in 93.3% of the top-15 highest-risk contracts (4.3x 
+more often). Non-Compete shows a similar pattern: 23.3% overall vs. 86.7% in the top 15 (3.7x more often). Notably, 
+neither ranks in the top 10 most  frequent clauses overall - unlike License Grant (50% of contracts), which is common 
+but not discriminative, appearing in high-risk and routine contracts alike.
 
-4. Calculated the risk score for each contract as the sum of the weight of the risky conditions present in it.
-
-5. Visualized the distribution and highlighted the contracts with the highest risk.
-
-**Tools:** Python, Pandas, Matplotlib/Seaborn, Streamlit (for the interactive dashboard).
-
-## Key Insight
-
-The average risk score across the sample of 510 contracts was 11.0 (maximum - 44, for the Content License, Marketing and 
-Sales Agreement). The number alone isn't very informative, what matters more is how risk is distributed within the 
-sample.
-
-**1. Risk is concentrated in a narrow group of contracts, not spred evenly.** The average risk score among the top 15 
-highest-risk contracts (under 3% of the sample) was 36.7 - 3.6 times higher than the remaining 495 contracts (10.3). At 
-the same time, only 42,7% of contracts have a risk score above average, meaning the average is artificially inflated by 
-a small number of outlier contracts with very high risk, rather than reflecting a typical contract in the sample. 
-Practical implication^ reviewing all 510 contracts equally is inefficient, prioritizing by risk score lets a legal/
-compliance team focus resources on the small share of contracts where risk is actually concentrated.
-
-**2. Uncapped Liability and Non-Compete are the strongest indicators of high risk - not the most common clauses.** The 
-Uncapped Liability clause appears in only 21.8% of contracts overall, but in 93.3% of the top-15 highest-risk (4.3x more
-often than average). A similar pattern holds for Non-Compete: 23.3 overall vs. 86.7 in the top 15 (3.7X more often). 
-Notably, these aren't the most frequent clauses in the dataset overall (neither ranks in the top 10 by overall frequency
-), which is exactly why their presence is a more informative risk indicator than widely-occurring clauses like License 
-Grant (50% overall), which appears in almost every top-15 contract but just as often across the sample as a whole. 
-Practical implication: the presence of Uncapped Liability or Non-Compete can be used as a quick flag for review 
-prioritization, even before calculating the full risk score.
-
-**Practical implication:** for legal/compliance team with limited review time, the data shows that the highest return 
-comes not reviewing every contract equally, but from targeted prioritization: by risk score and/or by the presence of 
-rare clauses that correlate strongly with risk (primarily Uncapped Liability and Non-Compete).
+*Implication: the presence of Uncapped Liability or Non-Compete can be used as a fast triage flag, even before a full 
+risk score is calculated*
 
 ![Top-10 clauses by frequency](outputs/clause_frequency.png)
 
-![Risk score distribution](outputs/risk_score_distribution.png)
-
 ![Top-15 highest-risk contracts](outputs/top_risky_contracts.png)
 
+<!-- TODO - enhancements planned, not yet computed:
+1. Pareto chart: cumulative % of total portfolio risk captured by top X% of contracts by score. Same underlying scores, 
+just sorted + cumsum - strong "80/20" visual for business stakeholders.
+2. Clause-level lift table across all 41 clause types (not just the top 2): overall frequency | frequency in top-15 | 
+lift ratio. Surface more indicators beyond Uncapped Liability / Non-Compete.
+3. Risk tiers (e.g. Critical / High / Medium / Low, via score quartiles) as an operational triangle framework instead of 
+a single top-15 cutoff. -->
 
-## Live Dashboard: IN PROGRESS
+<!-- ![Risk Concentration: Pareto Curve](outputs/risk_pareto.png) -->
 
-## What I Would Do With More Time / Data
+## Data & Methodology
 
-- Replace the expert-assigned weights with weights statistically derived from historical data on contract disputes/
-losses (if such data were available).
+**Dataset:** [CUAD(Contract Understanding Atticus Dataset)](https://www.atticusprojectai.org/cuad) - 510 commercial 
+contracts from SEC EDGAR fillings, annotated by practicing attorneys across 41 clause categories. Licensed under CC BY 
+4.0.
 
-- Add contract type classification (NDA, licence, M&A, etc.) and compare risk profiles across types.
+**Approach:**
+1. Flag the presence / absence of each of the 41 clause categories per contract.
+2. Calculated each clause's frequency across the full sample.
+3. Assign each clause category a risk weight from 1-10, based on its potential legal/financiak consequence for the 
+signing party (e.g. Uncapped Liability: 10; Governing Law: default weight).
+4. Compute each contract's risk score as the sum of weights of the risky clause present.
+5. Visualize the distribution and flag the highest-risk contracts. 
 
-- Validate the weigts with input from 2-5 practicing lawyer to reduce model subjectivity.
+**Limitations (by design, at this stage):**
+- Contracts are drawn from public SEC fillings of publicly traded US companies - the sample - is not representative of 
+private or non-US business.
+- Risk weights are expert-assigned based on legal/complience judgment, not statically derived - this is an expert-based 
+model, not machine learning, by deliberate choice at this stage.
+- 81 contracts (15.9% of the sample) have partially redacted text for individual clause.
 
-- Add an NLP module to automatically surface risk categories not yet labeled in the contract text.
+**Tools:** Python, NumPy, Pandas, Matplotlib/Seaborn
 
-## How To Run
+## Roadmap / Next Steps
+- Replace expert-assigned weights with weights statistically derived from historical contracts dispute/loss data, if 
+available.
+- Add contract type classification with input from 2-5 practicing lawyers to reduce model subjectivity,
+- Add NLP module to surface risk-reevant language not yet captured by the labeled clause categories.
+- Build an interactive Streamlit dashboard for exploring contracts by score and clause.
+
+## How to Run
 
 ```bash
-
-git clone https://github.com/JuliaZimenina/contract-risk-scoring.git
-cd contract-risk-scoring
+git clone https://github.com/JuliaZimenina/Contract_Risk_Scoring.git
+cd Contract_Risk_Scoring
 pip install -r requirements.txt
-# Download CUAD_v1_master_clauses.csv с 
-https://www.kaggle.com/datasets/theatticusproject/atticus-open-contract-dataset-aok-beta
-# and put in data/raw/
+# Download CUAD_v1_master_clauses.csv from:
+# https://www.kaggle.com/datasets/theatticusproject/atticus-open-contract-dataset-aok-beta
+# and place it in data/raw/
 python risk_analysis.py
-
 ```
 
-## Author
-Julia Zimenina - 10 years of experience in legal and compliance (banking, energy, healthcare, etc.), currently 
-developing my skills in data analytics. 
+## About the Author 
+
+Julia Zimenina - Data Analyst with 10+ years of experience in legal and compliance (banking, energy, healthcare, 
+manufacturing, agriculture), now applying that domain expertise and analytical mindset to data. This project reflect how 
+I approach analysis: start from a real business problem, stay honest about model's limitations, and translate findings 
+into a recommendation someone can act on.
 
 **[LinkedIn](https://www.linkedin.com/in/julia-zimenina/)** 
