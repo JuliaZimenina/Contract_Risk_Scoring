@@ -106,7 +106,7 @@ print(
 
 # Risk concentration analysis.
 N_TOP = 15 # How many contracts do we consider "the riskiest".
-sorted_df = df.sort_values("risk_score", ascending=False)
+sorted_df = df.sort_values(["risk_score", NAME_COL], ascending=[False, True], kind="mergesort")
 top_group = sorted_df.head(N_TOP)
 rest_group = sorted_df.iloc[N_TOP:]
 
