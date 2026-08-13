@@ -84,7 +84,9 @@ CC BY 4.0.
 1. Flag the presence/absence of each of the 40 clause categories per contract.
 2. Calculate each clause's frequency across the full sample.
 3. Assign each clause category a risk weight from 1-10, based on its potential legal/financial consequence for the 
-signing party (e.g. Uncapped Liability: 10; Governing Law: default weight).
+signing party (e.g. Uncapped Liability: 10; Governing Law: default weight). A score of 0 represents a contract with no 
+flagged clauses at all; negative scores indicate contracts where protective clauses outweigh risky ones - this is 
+intentional, not an error.
 4. Compute each contract's risk score as the sum of weights of the risky clauses present.
 5. Visualize the distribution and flag the highest-risk contracts; cross-check the clause-level findings across multiple
 top-N window sizes and against an alternative (lift-based) ranking.
@@ -100,6 +102,8 @@ there move in ~6.7-point increments; findings were checked against top-25 and to
 of that specific cutoff.
 - Several contracts are tied on risk score right at the top-15 boundary; the script breaks ties deterministically 
 (by contract name) so results are reproducible across runs and environments.
+- Risk scores can be negative by design - protective clauses (e.g. liability caps) subtract from score, so a negative 
+total reflects a net-protective contract, not an error.  
 
 **Tools:** Python, Pandas, NumPy, Matplotlib/Seaborn.
 
