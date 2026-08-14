@@ -1,6 +1,7 @@
 # Contract Risk Scoring
 ### Prioritizing legal review of commercial contracts using clause-level risk indicators
 
+**[Live Dashboard](https://contractriskscoring.streamlit.app/)**
 ---
 
 ## Key Takeaway
@@ -116,7 +117,6 @@ available.
 - Add contract type classification (NDA, license, M&A, etc.) and compare risk profiles across types.
 - Validate weights with input from 2-5 practicing lawyers to reduce model subjectivity.
 - Add an NLP module to surface risk-relevant language not yet captured by the labeled clause categories.
-- Build an interactive Streamlit dashboard for exploring contracts by score, tier, and clause.
 
 ---
 
