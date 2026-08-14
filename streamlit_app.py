@@ -13,7 +13,8 @@ st.set_page_config(
 st.title("📄 Contract Risk Scoring Dashboard")
 st.caption(
     "Interactive exploration of risk-scoring results for 510 commercial contracts "
-    "from the CUAD dataset, Full methodology: see README.md"
+    "from the CUAD dataset. Full methodology: see "
+    "[README.md](https://github.com/JuliaZimenina/Contract_Risk_Scoring/blob/master/README.md)."
 )
 
 # Loading data with protection against missing files.
