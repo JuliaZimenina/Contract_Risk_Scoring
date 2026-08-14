@@ -2,9 +2,6 @@ import os
 import pandas as pd
 import streamlit as st
 
-
-from risk_analysis import concentration_df, freq_df, NAME_COL
-
 # Page setup.
 st.set_page_config(
     page_title="Contract Risk Scoring",
@@ -60,7 +57,7 @@ NAME_COL = "Document Name"
 
 # We recalculate the tier for each contract (not just the summary).
 scores_df["risk_tier"] = pd.qcut(
-    scores_df["risc_score"],
+    scores_df["risk_score"],
     q=4,
     labels=["Low", "Medium", "High", "Critical"],
 )
@@ -103,6 +100,7 @@ with tab1:
     top_freq = freq_df.sort_values("share_present_pct", ascending=False).head(top_n_freq)
 
     # Bar Chart
+    st.bar_chart(top_freq.set_index("clause")["share_present_pct"], horizontal=True)
     st.dataframe(top_freq, use_container_width=True, hide_index=True)
 
 # --- Tab 2: risk concentration (gap and lift) ---
@@ -150,7 +148,7 @@ with tab3:
 
     st.bar_chart(tier_counts)
 
-    st.divider
+    st.divider()
     st.write("**Browse contracts within a specific tier:**")
 
     # Drop-down list with one choice.
@@ -187,6 +185,7 @@ with tab4:
     st.download_button(
         label="Download filtered contracts as CSV",
         data=filtered.to_csv(index=False).encode("utf-8"),
+        file_name="filtered_contracts.csv",
         mime="text/csv",
     )
 
