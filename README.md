@@ -106,7 +106,7 @@ of that specific cutoff.
 - Risk scores can be negative by design - protective clauses (e.g. liability caps) subtract from score, so a negative 
 total reflects a net-protective contract, not an error.  
 
-**Tools:** Python, Pandas, NumPy, Matplotlib/Seaborn.
+**Tools:** Python, Pandas, NumPy, Matplotlib/Seaborn, Streamlit.
 
 ---
 
